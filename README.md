@@ -2,7 +2,10 @@
 
 A fun and interactive **Proposal Card** built with real tech — not just for love, but to showcase frontend and backend integration with style!
 
-![Screenshot](screenshot.png) <!-- Optional: Add a screenshot -->
+![Screenshot](![image](https://github.com/user-attachments/assets/60766952-eeea-40ac-a290-a311393c0d6f)
+![image](https://github.com/user-attachments/assets/641cafd9-00f3-4c35-8128-9a7f1454b448)
+
+) <!-- Optional: Add a screenshot -->
 
 ---
 
