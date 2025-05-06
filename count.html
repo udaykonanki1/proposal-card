@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Statistics</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ff7f50, #ff1493);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #333;
+        }
+        .stats-card {
+            background-color: #ffffff;
+            width: 400px;
+            height: 300px;
+            padding: 30px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        h2 {
+            font-size: 30px;
+            color: #ff1493;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-family: cursive;
+        }
+        .stat {
+            font-size: 22px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #333;
+            background-color: #ff1493;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+        }
+        .stat:hover {
+            background-color: #ff007f;
+            transform: scale(1.05);
+        }
+        .stat span {
+            font-size: 28px;
+        }
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .refresh-button {
+            font-size: 18px;
+            background-color: #ff1493;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .refresh-button:hover {
+            background-color: #ff007f;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stats-card" id="statsCard">
+        <h2>Proposal Statistics</h2>
+        <div class="stat" id="acceptStat">Accepted: <span>0</span></div>
+        <div class="stat" id="rejectStat">Rejected: <span>0</span></div>
+        <div class="button-container">
+            <button class="refresh-button" onclick="refreshStats()">Refresh</button>
+        </div>
+    </div>
+
+    <script>
+        // Fetch statistics from the server
+        async function fetchStats() {
+            try {
+                const response = await fetch("http://localhost:3000/stats");
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("Error fetching stats:", error);
+                return { acceptCount: 0, rejectCount: 0 }; // Default to 0 if there's an error
+            }
+        }
+
+        // Update the statistics on the UI
+        function updateStats() {
+            fetchStats().then(data => {
+                document.getElementById('acceptStat').innerHTML = `Accepted: <span>${data.acceptCount}</span>`;
+                document.getElementById('rejectStat').innerHTML = `Rejected: <span>${data.rejectCount}</span>`;
+            });
+        }
+
+        // Refresh stats manually
+        function refreshStats() {
+            updateStats();
+        }
+
+        // Initial stats load
+        updateStats();
+    </script>
+
+</body>
+</html>

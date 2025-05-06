@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proposal Card</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(45deg, #ff7f50, #ff1493);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      color: #333;
+      position: relative;
+    }
+
+    .proposal-card {
+      background-color: #ffffff;
+      width: 350px;
+      height: 400px;
+      padding: 30px;
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease, left 0.5s ease, top 0.5s ease;
+      z-index: 2;
+    }
+
+    h2 {
+      font-size: 30px;
+      color: #ff1493;
+      margin-bottom: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      font-family: cursive;
+    }
+
+    p {
+      font-size: 18px;
+      margin-bottom: 40px;
+      color: #444;
+      font-family: monospace;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .accept, .reject {
+      font-size: 18px;
+      background-color: #ff1493;
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 45%;
+      text-transform: uppercase;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .accept:hover, .reject:hover {
+      background-color: #ff007f;
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      font-family: cursive;
+    }
+
+    .hearts {
+      font-size: 30px;
+      color: #ff007f;
+      position: absolute;
+      top: 20px;
+      animation: heartAnimation 2s;
+      font-family: cursive;
+      height: 20px;
+    }
+
+    @keyframes heartAnimation {
+      0% { transform: scale(1); opacity: 1; }
+      25% { transform: scale(1.2); opacity: 0.8; }
+      50% { transform: scale(1.5); opacity: 0.6; }
+      75% { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .love-animation {
+      animation: loveEffect 1.5s ease-out forwards;
+    }
+
+    @keyframes loveEffect {
+      0%   { opacity: 1; transform: scale(1); }
+      25%  { opacity: 0.6; transform: scale(1.1); }
+      50%  { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(1.5); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="proposal-card" id="proposalCard">
+  <div class="hearts" id="hearts">💖💘💝</div>
+  <h2>Will you accept my Proposal 💌</h2>
+  <p>Click below to accept or reject the proposal! 😍</p>
+  <div class="button-container">
+    <button class="accept" onclick="acceptProposal()">Accept</button>
+    <button class="reject" onclick="rejectProposal()">Reject</button>
+  </div>
+</div>
+
+<script>
+  const proposalCard = document.getElementById("proposalCard");
+  const hearts = document.getElementById("hearts");
+  let isAccepted = false;
+
+  function applyLoveAnimation() {
+    hearts.classList.add("love-animation");
+    setTimeout(() => {
+      hearts.classList.remove("love-animation");
+    }, 1500);
+  }
+
+  async function sendInteraction(action) {
+    try {
+      await fetch("http://localhost:3000/interaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action })
+      });
+    } catch (e) {
+      console.warn("No server at /interaction, skipping POST");
+    }
+  }
+
+  function acceptProposal() {
+    if (!isAccepted) {
+      alert('Yay! Proposal accepted! Let’s work together! 🎉');
+      isAccepted = true;
+      proposalCard.style.animation = 'none';
+      proposalCard.style.transform = 'scale(1)';
+      hearts.innerHTML = "💍 Thank You for Accepting! 💖";
+      applyLoveAnimation();
+      sendInteraction('accept');
+    }
+  }
+
+  function rejectProposal() {
+    if (!isAccepted) {
+      const cardWidth = proposalCard.offsetWidth;
+      const cardHeight = proposalCard.offsetHeight;
+      const padding = 10;
+
+      const maxX = window.innerWidth - cardWidth - padding;
+      const maxY = window.innerHeight - cardHeight - padding;
+
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+
+      proposalCard.style.left = `${randomX}px`;
+      proposalCard.style.top = `${randomY}px`;
+
+      hearts.innerHTML = "💔 Oh no! Try Again! 💔";
+      applyLoveAnimation();
+      sendInteraction('reject');
+    }
+  }
+</script>
+
+</body>
+</html>
